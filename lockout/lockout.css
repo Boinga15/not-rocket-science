@@ -1,0 +1,15 @@
+@keyframes pulse {
+    from {background-color: black;}
+    to {background-color: #BB0000;}
+}
+
+body {
+    text-align: center;
+    color:white;
+
+    background-color: black;
+    animation-name: pulse;
+    animation-duration: 400ms;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
