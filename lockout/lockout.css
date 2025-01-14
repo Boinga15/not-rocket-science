@@ -3,12 +3,26 @@
     to {background-color: #BB0000;}
 }
 
+@keyframes pulse-secret {
+    from {color: black;}
+    to {color: #BB0000;}
+}
+
 body {
     text-align: center;
     color:white;
 
     background-color: black;
     animation-name: pulse;
+    animation-duration: 400ms;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+.secret-message {
+    color: black;
+
+    animation-name: pulse-secret;
     animation-duration: 400ms;
     animation-iteration-count: infinite;
     animation-direction: alternate;
