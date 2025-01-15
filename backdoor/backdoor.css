@@ -1,5 +1,14 @@
 body {
     text-align: center;
+    font-family: monospace;
     background-color: #111111;
     color: white;
+}
+
+input {
+    width: 80%;
+    padding: 12px 20px;
+    font-size: 20px;
+    font-family: monospace;
+    text-align: center;
 }
