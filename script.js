@@ -6,9 +6,16 @@ var currentStage = 0;
 var systemStability = 5000;
 var pressesToNextStage = 1;
 
+// Stage 3
+var stage3Button = 0;
+
+// Stage 5
 var systemCode = "AGX51"
 
-var stage3Button = 0;
+// Stage 7
+var coreReferences = []
+var coreStatus = [1000, 1000, 1000]
+
 
 // Game Logic to execute every other frame.
 function logic() {
@@ -17,6 +24,21 @@ function logic() {
 
         if (systemStability <= 0) {
             window.location.href = "lockout/lockout.html";
+        }
+    }
+
+    if (currentStage >= 6) { // Core Instability
+        for (let i = 0; i < coreReferences.length; i++) {
+            if (coreStatus[i] <= 0) {
+                coreStatus[i] = 0;
+                systemStability -= 1;
+    
+                coreReferences[i].style = "color: red;"
+            } else if (coreStatus[i] <= 500) {
+                coreReferences[i].style = "color: yellow;"
+            } else {
+                coreReferences[i].style = "color: green;"
+            }
         }
     }
 }
@@ -56,8 +78,6 @@ function repairButton() {
 
 // Advance Button
 function advanceButton(buttonID) {
-    console.log("You tried tbh.")
-
     if (currentStage >= 2 && (buttonID != stage3Button)) {
 
 
@@ -68,13 +88,18 @@ function advanceButton(buttonID) {
         }
 
     } else {
-        console.log("Pressed.")
         pressesToNextStage -= 1;
 
         // Stage 3
         if (currentStage >= 2) {
-            stage3Button = Math.round(Math.random());
-            for (let i = 0; i < 2; i++) {
+            maxButton = 1.0;
+            if (currentStage >= 7) {
+                maxButton = 2.0;
+            }
+
+            stage3Button = Math.round(Math.random() * maxButton);
+            for (let i = 0; i < (1 + maxButton); i++) {
+                console.log("advanceButton" + (i + 1));
                 if (i == stage3Button) {
                     document.getElementById("advanceButton" + (i + 1)).style = "color: green;";
                 } else {
@@ -123,33 +148,82 @@ function handleStage() {
 
             document.getElementById("advanceButton1").style = "color: green;";
             break;
+    
+        case 3:
+            //pressesToNextStage = 10;
+            pressesToNextStage = 1;
+            helpTextRef.innerHTML = "I'm sure you're wondering if this has a point or not. If any of these buttons rea;;y matter. Well it doesn't matter. At least, not to you.";
+            break;
         
-            case 3:
-                //pressesToNextStage = 10;
-                pressesToNextStage = 1;
-                helpTextRef.innerHTML = "I'm sure you're wondering if this has a point or not. If any of these buttons rea;;y matter. Well it doesn't matter. At least, not to you.";
-                break;
+        case 4:
+            //pressesToNextStage = 5;
+            pressesToNextStage = 1;
+            helpTextRef.innerHTML = "Alright, new gimmick? New gimmick. Makes sure you keep an eye on the System Code. If it changes, copy it into the text field next to the code. Copy and paste, type it out, I don't care how you get it in there, just get it in there. That activate button won't work if you've got the wrong code."
             
-            case 4:
-                pressesToNextStage = 10;
-                helpTextRef.innerHTML = "Alright, new gimmick? New gimmick. Makes sure you keep an eye on the System Code. If it changes, copy it into the text field next to the code. Copy and paste, type it out, I don't care how you get it in there, just get it in there. That activate button won't work if you've got the wrong code."
-                
-                let newParagraph = document.createElement("p");
-                newParagraph.id = "systemCodeParagrpah"
-                document.getElementById("systemCodeArea").appendChild(newParagraph)
-                
-                let newField = document.createElement("input");
-                newField.type = "text";
-                newField.id = "systemCodeInput";
-                document.getElementById("systemCodeArea").append(newField);
+            let newParagraph = document.createElement("p");
+            newParagraph.id = "systemCodeParagrpah"
+            document.getElementById("systemCodeArea").appendChild(newParagraph)
+            
+            let newField = document.createElement("input");
+            newField.type = "text";
+            newField.id = "systemCodeInput";
+            document.getElementById("systemCodeArea").append(newField);
 
-                newParagraph.innerHTML = systemCode;
-                break;
+            newParagraph.innerHTML = systemCode;
+            break;
+        
+        case 5:
+            //pressesToNextStage = 10;
+            pressesToNextStage = 1;
+            helpTextRef.innerHTML = "By the way, if you see any artifacts in the text here, ignore it. It keeps changing itself, I don't know why.";
+            break;
+        
+        case 6:
+            //pressesToNextStage = 10;
+            pressesToNextStage = 1;
+            helpTextRef.innerHTML = "Hope you weren't getting too comfortable with the system integrity. Keep an eye on thoes cores and click them if they go yellow or red. Your system integrity will degrade faster if they're red."
+            
+            divReference = document.getElementById("coreArea")
+
+            let newBreak = document.createElement("br");
+            divReference.appendChild(newBreak)
+
+            for (let i = 0; i < 3; i++) {
+                let newButton = document.createElement("button");
+                newButton.innerHTML = "CORE " + (i + 1);
+                newButton.id = "coreButton" + (i + 1);
+
+                divReference.appendChild(newButton);
+                coreReferences.push(newButton);
+
+                newButton.addEventListener("click", function() {
+                    resetCore(i);
+                });
+            }
+
+            break;
+        
+        case 7:
+            //pressesToNextStage = 10;
+            pressesToNextStage = 100;
+            helpTextRef.innerHTML = "Alright, a bit of a difficulty boost. Third button to worry about when activating stuff, there you go.";
+            
+            let newButton2 = document.createElement("button");
+            newButton2.innerHTML = "Advance";
+            newButton2.id = "advanceButton3";
+
+            document.getElementById("extraButton2").appendChild(newButton2);
+
+            newButton2.addEventListener("click", function() {
+                advanceButton(2);
+            });
+            break;
+
     }
 }
 
 
-// Steag 5 ---> Randomise Code
+// Stage 5 ---> Randomise Code
 var codeLoop = window.setInterval(function() {
 
     if(Math.random() > 0.55) {
@@ -165,3 +239,17 @@ var codeLoop = window.setInterval(function() {
     }
 
 }, 4897);
+
+
+// Stage 7 ---> Core Instability Increase
+var coreLoop = window.setInterval(function() {
+    for (let i = 0; i < coreReferences.length; i++) {
+        coreStatus[i] -= (Math.random() * 100);
+    }
+}, 516);
+
+
+// Stage 7 ---> Reset Core Instability
+function resetCore(id) {
+    coreStatus[id] = 800 + (Math.random() * 200);
+}
